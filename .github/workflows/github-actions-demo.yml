@@ -6,6 +6,22 @@ on:
       - 'main'
 
 jobs:
+  alert_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ github.actor }} created commit:
+            Commit message: ${{ github.event.commits[0].message }}
+            
+            Repository: ${{ github.repository }}
+            
+            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -56,3 +72,19 @@ jobs:
           heroku_app_name: "demo-example-mp" #Must be unique in Heroku
           heroku_email: "ialex.egorov.01@gmail.com"
           usedocker: true
+
+  alert:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Commit message: ${{github.sha}}
+
+            Repository: ${{ github.repository }}
+            
+            Deploy completed successfully! ✅
