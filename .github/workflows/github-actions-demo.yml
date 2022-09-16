@@ -6,12 +6,21 @@ on:
       - 'main'
 
 jobs:
-  docker:
+  test:
     runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
         uses: actions/checkout@v3
+      -
+        name: Test
+        run: |
+          sleep 3
+          echo "Test complited! ✅"
+  docker-build-push:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -31,3 +40,12 @@ jobs:
           context: .
           push: true
           tags: docker.io/89109249948/app:latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: docker-build-push
+    steps:
+      - 
+        name: Deploy 
+        run: |
+          sleep 3
+          echo "Deploy complited! ✅"
