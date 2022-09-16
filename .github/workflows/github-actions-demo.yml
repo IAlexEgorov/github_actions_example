@@ -49,6 +49,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
+      - name: fail
+        run: exit 2
+
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up QEMU
@@ -83,9 +86,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: docker_build_push
     steps:
-      - name: fail
-        run: exit 2
-
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
