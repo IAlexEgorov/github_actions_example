@@ -31,6 +31,7 @@ jobs:
       -
         name: Test
         run: |
+          exit 2
           sleep 3
           echo "Test complited! ✅"
 
@@ -76,8 +77,10 @@ jobs:
   alert:
     needs: deploy
     runs-on: ubuntu-latest
+    if: always()
     steps:
-      - name: send telegram message on push
+      - name: Send success msg
+        if: success()
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
@@ -88,4 +91,17 @@ jobs:
             Commit message: ${{github.sha}}
 
             Repository: ${{ github.repository }}
+      - name: send telegram message on push
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ❌ Deploy was failed! ❌
+
+            Commit message: ${{github.sha}}
+
+            Repository: ${{ github.repository }}
+          
             
