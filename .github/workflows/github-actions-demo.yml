@@ -34,6 +34,20 @@ jobs:
           exit 2
           sleep 3
           echo "Test complited! ✅"
+      - 
+        name: send telegram message on push
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ❌ Test was failed! ❌
+
+            Commit message: ${{github.sha}}
+
+            Repository: ${{ github.repository }}
+      
 
   docker_build_push:
     runs-on: ubuntu-latest
@@ -61,6 +75,19 @@ jobs:
           context: .
           push: true
           tags: docker.io/89109249948/app:latest
+      - 
+        name: send telegram message on push
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ❌ Docker build and push was failed! ❌
+
+            Commit message: ${{github.sha}}
+
+            Repository: ${{ github.repository }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -73,13 +100,21 @@ jobs:
           heroku_app_name: "demo-example-mp" #Must be unique in Heroku
           heroku_email: "ialex.egorov.01@gmail.com"
           usedocker: true
+      - 
+        name: send telegram message on push
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ❌ Deploy was failed! ❌
 
-  alert:
-    needs: deploy
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Send success msg
+            Commit message: ${{github.sha}}
+
+            Repository: ${{ github.repository }}
+      - 
+        name: Send success msg
         if: success()
         uses: appleboy/telegram-action@master
         with:
@@ -87,18 +122,6 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
             ✅ Deploy completed successfully! ✅
-
-            Commit message: ${{github.sha}}
-
-            Repository: ${{ github.repository }}
-      - name: send telegram message on push
-        if: ${{ jobs.test.status != success }} 
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            ❌ Deploy was failed! ❌
 
             Commit message: ${{github.sha}}
 
