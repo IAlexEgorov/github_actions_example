@@ -26,8 +26,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
-        uses: docker.io/89109249948/build-push-action@v3
+        uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: docker.io/app:latest
+          tags: docker.io/89109249948/app:latest
