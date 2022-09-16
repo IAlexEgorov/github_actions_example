@@ -30,4 +30,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: docker.io/89109249948/nginx:stable-alpine
+          tags: docker.io/89109249948/app:latest
