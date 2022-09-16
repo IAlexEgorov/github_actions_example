@@ -92,7 +92,7 @@ jobs:
 
             Repository: ${{ github.repository }}
       - name: send telegram message on push
-        if: ${{ jobs.test.if }} != success
+        if: ${{ jobs.test.if != success }} 
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
