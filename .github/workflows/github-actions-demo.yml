@@ -49,9 +49,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: fail
-        run: exit 2
-
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up QEMU
